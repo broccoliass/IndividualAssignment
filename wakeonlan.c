@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <sys/types.h>
 
 int main(int argc, const char* argv[]){
 	int i = 0;
@@ -30,7 +31,7 @@ int main(int argc, const char* argv[]){
 		printf("Incorrect mac address.\n");
 		exit(EXIT_FAILURE);
 	}
-	printf("\nPacket will sent to %02hhx:%02x:%02x:%02x:%02x:%02x\n", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+	printf("\nPacket will sent to %02x:%02x:%02x:%02x:%02x:%02x\n", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
     	if(argc > 2){
 		i = sscanf(argv[2],"%d.%d.%d.%d", &i, &i, &i, &i);
@@ -40,7 +41,10 @@ int main(int argc, const char* argv[]){
 	}
 
     	socket_desc = socket(AF_INET, SOCK_DGRAM, 0);
-  	//socket setup not yet
+    	if(setsockopt(socket_desc, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast) == -1){
+        	printf("The socket setup failed.\n");
+        	exit(EXIT_FAILURE);
+    	}
 
     	clientSide.sin_family = AF_INET;
     	clientSide.sin_addr.s_addr = INADDR_ANY;
