@@ -7,6 +7,18 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
+#include <netinet/in.h>
+#include <netdb.h>
+
+void createMagicPacket(unsigned char packet[], unsigned int macAddress[]){
+	int i;
+	unsigned char mac[6];
+
+	for(i = 0; i < 6; i++){
+		packet[i] = 0xFF;
+		mac[i] = macAddress[i];
+	}
+}
 
 int main(int argc, const char* argv[]){
 	int i = 0;
@@ -56,6 +68,6 @@ int main(int argc, const char* argv[]){
     	serverSide.sin_addr.s_addr = inet_addr(broadcastAddress);
     	serverSide.sin_port = htons(9);
 
-	printf("\nWaking up (mac address)");
+	printf("\nSend packet to (mac address)");
 	exit(EXIT_SUCCESS);
 }
