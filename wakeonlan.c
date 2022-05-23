@@ -11,6 +11,7 @@
 #include <netdb.h>
 #include <ctype.h>
 
+//fucntion to create magic packet
 void createMagicPacket(unsigned char packet[], unsigned int macAddress[]){
 	int i;
 	unsigned char mac[6];
@@ -30,7 +31,8 @@ int main(int argc, const char* argv[]){
     	int broadcast = 1;
     	int socket_desc;
 
-    	char broadcastAddress[16] = "";
+	//broadcasr address
+    	char broadcastAddress[16] = "192.168.1.255";
 
     	struct sockaddr_in clientSide;
     	struct sockaddr_in serverSide;
@@ -38,8 +40,9 @@ int main(int argc, const char* argv[]){
     	unsigned char packet[102];
     	unsigned int mac[6];
 
+	//if user enter wrong input
 	if(argc < 2){
-		printf("No input\n");
+		printf("This is not a Mac Address\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -57,8 +60,10 @@ int main(int argc, const char* argv[]){
 		}
 	}
 
+	//call create magic packet function
 	createMagicPacket(packet, mac);
 
+	//setp socket
     	socket_desc = socket(AF_INET, SOCK_DGRAM, 0);
     	if(setsockopt(socket_desc, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast) == -1){
         	printf("The socket setup failed.\n");
@@ -75,8 +80,9 @@ int main(int argc, const char* argv[]){
     	serverSide.sin_addr.s_addr = inet_addr(broadcastAddress);
     	serverSide.sin_port = htons(9);
 
+	//send packet
         sendto(socket_desc, &packet, sizeof(unsigned char) * 102, 0, (struct sockaddr*) &serverSide, sizeof(serverSide));
 
-	printf("\nSend packet to (mac address) %02hhx:%02x:%02x:%02x:%02x:%02x\n\n", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+	printf("\nMagic Packet has been sent to %02hhx:%02x:%02x:%02x:%02x:%02x\n\n", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 	exit(EXIT_SUCCESS);
 }
