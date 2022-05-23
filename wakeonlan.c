@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <ctype.h>
 
 void createMagicPacket(unsigned char packet[], unsigned int macAddress[]){
 	int i;
@@ -17,6 +18,10 @@ void createMagicPacket(unsigned char packet[], unsigned int macAddress[]){
 	for(i = 0; i < 6; i++){
 		packet[i] = 0xFF;
 		mac[i] = macAddress[i];
+	}
+
+	for(i = 1; i <= 16; i++){
+		memcpy(&packet[i * 6], &mac, 6 * sizeof(unsigned char));
 	}
 }
 
@@ -67,6 +72,8 @@ int main(int argc, const char* argv[]){
     	serverSide.sin_family = AF_INET;
     	serverSide.sin_addr.s_addr = inet_addr(broadcastAddress);
     	serverSide.sin_port = htons(9);
+
+        sendto(socket_desc, &packet, sizeof(unsigned char) * 102, 0, (struct sockaddr*) &serverSide, sizeof(serverSide));
 
 	printf("\nSend packet to (mac address)");
 	exit(EXIT_SUCCESS);
