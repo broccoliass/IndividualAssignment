@@ -57,6 +57,8 @@ int main(int argc, const char* argv[]){
 		}
 	}
 
+	createMagicPacket(packet, mac);
+
     	socket_desc = socket(AF_INET, SOCK_DGRAM, 0);
     	if(setsockopt(socket_desc, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast) == -1){
         	printf("The socket setup failed.\n");
