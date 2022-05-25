@@ -11,7 +11,7 @@
 #include <netdb.h>
 #include <ctype.h>
 
-//fucntion to create magic packet
+//function to create magic packet
 void createMagicPacket(unsigned char packet[], unsigned int macAddress[]){
 	int i;
 	unsigned char mac[6];
@@ -46,12 +46,13 @@ int main(int argc, const char* argv[]){
 		exit(EXIT_FAILURE);
 	}
 
+	//parse the mac address
     	i = sscanf(argv[1],"%x:%x:%x:%x:%x:%x", &(mac[0]), &(mac[1]), &(mac[2]), &(mac[3]), &(mac[4]), &(mac[5]));
 	if(i != 6){
 		printf("Incorrect mac address.\n");
 		exit(EXIT_FAILURE);
 	}
-	printf("\nPacket will sent to %02x:%02x:%02x:%02x:%02x:%02x\n", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+	printf("\nPacket will be sent to %02x:%02x:%02x:%02x:%02x:%02x\n", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
     	if(argc > 2){
 		i = sscanf(argv[2],"%d.%d.%d.%d", &i, &i, &i, &i);
@@ -59,11 +60,12 @@ int main(int argc, const char* argv[]){
 			strcpy(broadcastAddress, argv[2]);
 		}
 	}
+	printf("Broadcast address: %s\n", broadcastAddress);
 
 	//call create magic packet function
 	createMagicPacket(packet, mac);
 
-	//setp socket
+	//setup socket
     	socket_desc = socket(AF_INET, SOCK_DGRAM, 0);
     	if(setsockopt(socket_desc, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast) == -1){
         	printf("The socket setup failed.\n");
